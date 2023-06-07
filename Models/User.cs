@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace dotnet_products_rest_api.Models;
 
@@ -9,10 +12,13 @@ public partial class User
 
     public string FullName { get; set; } = null!;
 
+    [EmailAddress]
     public string Email { get; set; } = null!;
 
     public string Gender { get; set; } = null!;
 
+    [JsonProperty(PropertyName = "dateOfBirth")]
+    [JsonConverter(typeof(DateOnlyConverter), "yyyy-MM-dd")]
     public DateOnly? DateOfBirth { get; set; }
 
     public uint CountryCode { get; set; }

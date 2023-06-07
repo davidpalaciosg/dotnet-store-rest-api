@@ -24,25 +24,32 @@ namespace dotnet_products_rest_api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-          if (_context.Users == null)
-          {
-              return NotFound();
-          }
-          var filteredUsers = await _context.Users.Where(c => c.State == 1).ToListAsync();
-           return filteredUsers;
+            if (_context.Users == null)
+            {
+                return NotFound();
+            }
+
+            var completeUsers = await _context.Users.
+                  Include(u => u.CountryCodeNavigation)
+                  .Include(u => u.Merchants)
+                  .Include(u => u.Orders)
+                  .Where(u => u.State == 1)
+                  .ToListAsync();
+
+            return completeUsers;
         }
 
         // GET: api/Users/5
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(uint id)
         {
-          if (_context.Users == null)
-          {
-              return NotFound();
-          }
+            if (_context.Users == null)
+            {
+                return NotFound();
+            }
             var user = await _context.Users.FindAsync(id);
 
-            if (user == null || user.State==0)
+            if (user == null || user.State == 0)
             {
                 return NotFound();
             }
@@ -86,10 +93,14 @@ namespace dotnet_products_rest_api.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
-          if (_context.Users == null)
-          {
-              return Problem("Entity set 'StoreDbContext.Users'  is null.");
-          }
+            if (_context.Users == null)
+            {
+                return Problem("Entity set 'StoreDbContext.Users'  is null.");
+            }
+            DateTime now = DateTime.Now;
+            DateOnly dateOnly = DateOnly.FromDateTime(now);
+            user.CreatedAt = dateOnly;
+
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
@@ -121,7 +132,7 @@ namespace dotnet_products_rest_api.Controllers
 
         private bool UserExists(uint id)
         {
-            return (_context.Users?.Any(e => e.Id == id && e.State==1)).GetValueOrDefault();
+            return (_context.Users?.Any(e => e.Id == id && e.State == 1)).GetValueOrDefault();
         }
     }
 }

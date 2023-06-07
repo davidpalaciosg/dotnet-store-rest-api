@@ -24,10 +24,10 @@ namespace dotnet_products_rest_api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Country>>> GetCountries()
         {
-          if (_context.Countries == null)
-          {
-              return NotFound();
-          }
+            if (_context.Countries == null)
+            {
+                return NotFound();
+            }
             var filteredCountries = await _context.Countries.Where(c => c.State == 1).ToListAsync();
             return filteredCountries;
         }
@@ -36,13 +36,13 @@ namespace dotnet_products_rest_api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Country>> GetCountry(uint id)
         {
-          if (_context.Countries == null)
-          {
-              return NotFound();
-          }
+            if (_context.Countries == null)
+            {
+                return NotFound();
+            }
             var country = await _context.Countries.FindAsync(id);
 
-            if (country == null || country.State==0)
+            if (country == null || country.State == 0)
             {
                 return NotFound();
             }
@@ -86,10 +86,10 @@ namespace dotnet_products_rest_api.Controllers
         [HttpPost]
         public async Task<ActionResult<Country>> PostCountry(Country country)
         {
-          if (_context.Countries == null)
-          {
-              return Problem("Entity set 'StoreDbContext.Countries'  is null.");
-          }
+            if (_context.Countries == null)
+            {
+                return Problem("Entity set 'StoreDbContext.Countries'  is null.");
+            }
             _context.Countries.Add(country);
             await _context.SaveChangesAsync();
 
@@ -105,7 +105,7 @@ namespace dotnet_products_rest_api.Controllers
                 return NotFound();
             }
             var country = await _context.Countries.FindAsync(id);
-            if (country == null || country.State==0)
+            if (country == null || country.State == 0)
             {
                 return NotFound();
             }
@@ -121,7 +121,7 @@ namespace dotnet_products_rest_api.Controllers
 
         private bool CountryExists(uint id)
         {
-            return (_context.Countries?.Any(e => e.Code == id && e.State==1)).GetValueOrDefault();
+            return (_context.Countries?.Any(e => e.Code == id && e.State == 1)).GetValueOrDefault();
         }
     }
 }

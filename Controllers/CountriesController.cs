@@ -27,7 +27,7 @@ namespace dotnet_products_rest_api.Controllers
             {
                 return Problem("Entity set 'StoreDbContext.Countries' is null.");
             }
-
+            
             var filteredCountries = await countries.Where(c => c.State == 1).ToListAsync();
             return View(filteredCountries);
         }
@@ -154,17 +154,17 @@ namespace dotnet_products_rest_api.Controllers
             if (country != null)
             {
                 //Update the state of the country to 0
-                country.State=0;
+                country.State = 0;
                 _context.Countries.Update(country);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool CountryExists(uint id)
         {
-          return (_context.Countries?.Any(e => e.Code == id && e.State==1)).GetValueOrDefault();
+            return (_context.Countries?.Any(e => e.Code == id && e.State == 1)).GetValueOrDefault();
         }
     }
 }
