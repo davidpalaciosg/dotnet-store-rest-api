@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  mariadb:
+    image: mariadb
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: mydatabase
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    volumes:
+      - ./mariadb_data:/var/lib/mysql
+    networks:
+      - mynetwork
+
+  adminer:
+    image: adminer
+    ports:
+      - 8100:8080
+    networks:
+      - mynetwork
+networks:
+  mynetwork:
