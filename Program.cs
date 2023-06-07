@@ -1,7 +1,17 @@
+using dotnet_products_rest_api.Models;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+//Add MariaDB database
+builder.Services.AddDbContext<StoreDbContext>(options =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("MariaDbConnectionString");
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+});
 
 var app = builder.Build();
 
