@@ -28,7 +28,8 @@ namespace dotnet_products_rest_api.Controllers
           {
               return NotFound();
           }
-            return await _context.Users.ToListAsync();
+          var filteredUsers = await _context.Users.Where(c => c.State == 1).ToListAsync();
+           return filteredUsers;
         }
 
         // GET: api/Users/5
@@ -41,7 +42,7 @@ namespace dotnet_products_rest_api.Controllers
           }
             var user = await _context.Users.FindAsync(id);
 
-            if (user == null)
+            if (user == null || user.State==0)
             {
                 return NotFound();
             }
@@ -108,8 +109,11 @@ namespace dotnet_products_rest_api.Controllers
             {
                 return NotFound();
             }
-
-            _context.Users.Remove(user);
+            //Update the state of the user to 0
+            user.State = 0;
+            _context.Entry(user).State = EntityState.Modified;
+            _context.Users.Update(user);
+            //_context.Users.Remove(user);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -117,7 +121,7 @@ namespace dotnet_products_rest_api.Controllers
 
         private bool UserExists(uint id)
         {
-            return (_context.Users?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Users?.Any(e => e.Id == id && e.State==1)).GetValueOrDefault();
         }
     }
 }

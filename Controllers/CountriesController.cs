@@ -21,9 +21,15 @@ namespace dotnet_products_rest_api.Controllers
         // GET: Countries
         public async Task<IActionResult> Index()
         {
-              return _context.Countries != null ? 
-                          View(await _context.Countries.ToListAsync()) :
-                          Problem("Entity set 'StoreDbContext.Countries'  is null.");
+            var countries = _context.Countries;
+
+            if (countries == null)
+            {
+                return Problem("Entity set 'StoreDbContext.Countries' is null.");
+            }
+
+            var filteredCountries = await countries.Where(c => c.State == 1).ToListAsync();
+            return View(filteredCountries);
         }
 
         // GET: Countries/Details/5
@@ -35,7 +41,7 @@ namespace dotnet_products_rest_api.Controllers
             }
 
             var country = await _context.Countries
-                .FirstOrDefaultAsync(m => m.Code == id);
+                .FirstOrDefaultAsync(m => m.Code == id && m.State == 1);
             if (country == null)
             {
                 return NotFound();
@@ -147,7 +153,9 @@ namespace dotnet_products_rest_api.Controllers
             var country = await _context.Countries.FindAsync(id);
             if (country != null)
             {
-                _context.Countries.Remove(country);
+                //Update the state of the country to 0
+                country.State=0;
+                _context.Countries.Update(country);
             }
             
             await _context.SaveChangesAsync();
@@ -156,7 +164,7 @@ namespace dotnet_products_rest_api.Controllers
 
         private bool CountryExists(uint id)
         {
-          return (_context.Countries?.Any(e => e.Code == id)).GetValueOrDefault();
+          return (_context.Countries?.Any(e => e.Code == id && e.State==1)).GetValueOrDefault();
         }
     }
 }

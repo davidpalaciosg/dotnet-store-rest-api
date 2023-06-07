@@ -28,7 +28,8 @@ namespace dotnet_products_rest_api.Controllers
           {
               return NotFound();
           }
-            return await _context.Countries.ToListAsync();
+            var filteredCountries = await _context.Countries.Where(c => c.State == 1).ToListAsync();
+            return filteredCountries;
         }
 
         // GET: api/Countries/5
@@ -41,7 +42,7 @@ namespace dotnet_products_rest_api.Controllers
           }
             var country = await _context.Countries.FindAsync(id);
 
-            if (country == null)
+            if (country == null || country.State==0)
             {
                 return NotFound();
             }
@@ -104,12 +105,15 @@ namespace dotnet_products_rest_api.Controllers
                 return NotFound();
             }
             var country = await _context.Countries.FindAsync(id);
-            if (country == null)
+            if (country == null || country.State==0)
             {
                 return NotFound();
             }
+            //Update the state of the country to 0
+            country.State = 0;
+            _context.Entry(country).State = EntityState.Modified;
+            _context.Countries.Update(country);
 
-            _context.Countries.Remove(country);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -117,7 +121,7 @@ namespace dotnet_products_rest_api.Controllers
 
         private bool CountryExists(uint id)
         {
-            return (_context.Countries?.Any(e => e.Code == id)).GetValueOrDefault();
+            return (_context.Countries?.Any(e => e.Code == id && e.State==1)).GetValueOrDefault();
         }
     }
 }
