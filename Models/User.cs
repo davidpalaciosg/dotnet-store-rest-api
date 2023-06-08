@@ -37,10 +37,11 @@ public partial class User
 
     [Display(Name = "País")]
     [JsonPropertyName("country")]
-    [System.Text.Json.Serialization.JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public virtual Country? CountryCodeNavigation { get; set; } = null;
 
+    [System.Text.Json.Serialization.JsonIgnore]
     public virtual ICollection<Merchant> Merchants { get; set; } = new List<Merchant>();
 
+    [System.Text.Json.Serialization.JsonIgnore]
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }

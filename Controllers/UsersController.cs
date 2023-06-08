@@ -49,7 +49,7 @@ namespace dotnet_products_rest_api.Controllers
         // GET: Users/Create
         public IActionResult Create()
         {
-            ViewData["CountryCode"] = new SelectList(_context.Countries, "Code", "Name");
+            ViewData["CountryCode"] = new SelectList(_context.Countries.Where(c => c.State == 1), "Code", "Name");
             return View();
         }
 
@@ -63,7 +63,7 @@ namespace dotnet_products_rest_api.Controllers
             //Add country code navigation property
             var country = await _context.Countries.FindAsync(user.CountryCode);
             if (country == null)
-                return Problem("Country code is not valid.");
+                return NotFound("Country code is not valid.");
 
             user.CountryCodeNavigation = country;
 
@@ -87,7 +87,7 @@ namespace dotnet_products_rest_api.Controllers
             {
                 return NotFound();
             }
-            ViewData["CountryCode"] = new SelectList(_context.Countries, "Code", "Name");
+            ViewData["CountryCode"] = new SelectList(_context.Countries.Where(c => c.State == 1), "Code", "Name");
             return View(user);
         }
 
