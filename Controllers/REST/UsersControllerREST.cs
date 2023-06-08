@@ -39,17 +39,14 @@ namespace dotnet_products_rest_api.Controllers
 
 		// GET: api/Users/5
 		[HttpGet("{id}")]
-		public async Task<ActionResult<User>> GetUser(uint id)
+		public ActionResult<User> GetUser(uint id)
 		{
 			if (_context.Users == null)
 			{
 				return NotFound();
 			}
 
-			var user = await _context.Users
-				.Include(u => u.CountryCodeNavigation)
-				.Where(u => u.Id == id && u.State == 1)
-				.FirstOrDefaultAsync();
+			var user = getUserById(id).Result;
 
 			if (user == null || user.State == 0)
 			{
@@ -74,6 +71,7 @@ namespace dotnet_products_rest_api.Controllers
 			try
 			{
 				user.CreatedAt = DateOnly.FromDateTime(DateTime.Now);
+				user.CountryCodeNavigation = await _context.Countries.FindAsync(user.CountryCode);
 				_context.Users.Update(user);
 				await _context.SaveChangesAsync();
 				return Ok(user);
@@ -84,10 +82,7 @@ namespace dotnet_products_rest_api.Controllers
 				{
 					return NotFound();
 				}
-				else
-				{
-					throw;
-				}
+				return BadRequest();
 			}
 		}
 
@@ -131,6 +126,7 @@ namespace dotnet_products_rest_api.Controllers
 			}
 			//Update the state of the user to 0
 			user.State = 0;
+			user.CountryCodeNavigation = await _context.Countries.FindAsync(user.CountryCode);
 			_context.Entry(user).State = EntityState.Modified;
 			_context.Users.Update(user);
 			await _context.SaveChangesAsync();
@@ -141,6 +137,13 @@ namespace dotnet_products_rest_api.Controllers
 		private bool UserExists(uint id)
 		{
 			return (_context.Users?.Any(e => e.Id == id && e.State == 1)).GetValueOrDefault();
+		}
+
+		private async Task<User?> getUserById(uint id)
+		{
+			return await _context.Users
+				.Include(u => u.CountryCodeNavigation)
+				.FirstOrDefaultAsync(u => u.Id == id && u.State == 1);
 		}
 	}
 }

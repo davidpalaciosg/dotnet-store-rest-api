@@ -71,6 +71,8 @@ namespace dotnet_products_rest_api.Controllers.REST
 			{
 				merchant.CreatedAt = DateOnly.FromDateTime(DateTime.Now);
 				merchant.State = 1;
+				merchant.Admin = await _context.Users.FindAsync(merchant.AdminId);
+				merchant.CountryCodeNavigation = await _context.Countries.FindAsync(merchant.CountryCode);
 				_context.Merchants.Update(merchant);
 				await _context.SaveChangesAsync();
 				return Ok(merchant);
