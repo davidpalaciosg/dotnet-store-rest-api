@@ -29,8 +29,8 @@ namespace dotnet_products_rest_api.Controllers
                 return NotFound();
             }
 
-            var completeUsers = await _context.Users.
-                  Include(u => u.CountryCodeNavigation)
+            var completeUsers = await _context.Users
+                  .Include(u => u.CountryCodeNavigation)
                   .Include(u => u.Merchants)
                   .Include(u => u.Orders)
                   .Where(u => u.State == 1)
@@ -71,7 +71,10 @@ namespace dotnet_products_rest_api.Controllers
 
             try
             {
+                user.CreatedAt = DateOnly.FromDateTime(DateTime.Now);
+                _context.Users.Update(user);
                 await _context.SaveChangesAsync();
+                return Ok(user);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -84,8 +87,6 @@ namespace dotnet_products_rest_api.Controllers
                     throw;
                 }
             }
-
-            return NoContent();
         }
 
         // POST: api/Users
@@ -97,9 +98,15 @@ namespace dotnet_products_rest_api.Controllers
             {
                 return Problem("Entity set 'StoreDbContext.Users'  is null.");
             }
-            DateTime now = DateTime.Now;
-            DateOnly dateOnly = DateOnly.FromDateTime(now);
-            user.CreatedAt = dateOnly;
+            
+            user.CreatedAt = DateOnly.FromDateTime(DateTime.Now);
+            //Find and Add country
+            var c = await _context.Countries.FindAsync(user.CountryCode);
+            if (c == null)
+                return BadRequest("Country with code " + user.CountryCode + " not found.");
+                
+
+            user.CountryCodeNavigation = c;
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
@@ -124,10 +131,9 @@ namespace dotnet_products_rest_api.Controllers
             user.State = 0;
             _context.Entry(user).State = EntityState.Modified;
             _context.Users.Update(user);
-            //_context.Users.Remove(user);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(user);
         }
 
         private bool UserExists(uint id)

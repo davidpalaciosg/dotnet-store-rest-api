@@ -65,6 +65,7 @@ namespace dotnet_products_rest_api.Controllers
             try
             {
                 await _context.SaveChangesAsync();
+                return Ok(country);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -77,8 +78,6 @@ namespace dotnet_products_rest_api.Controllers
                     throw;
                 }
             }
-
-            return NoContent();
         }
 
         // POST: api/Countries
@@ -116,7 +115,7 @@ namespace dotnet_products_rest_api.Controllers
 
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(country);
         }
 
         private bool CountryExists(uint id)

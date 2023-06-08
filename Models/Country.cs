@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations;
 
 namespace dotnet_products_rest_api.Models;
@@ -18,7 +17,9 @@ public partial class Country
     [Display(Name = "Estado")]
     public sbyte State { get; set; }
 
+    [JsonIgnore]
     public virtual ICollection<Merchant> Merchants { get; set; } = new List<Merchant>();
 
+    [JsonIgnore]
     public virtual ICollection<User> Users { get; set; } = new List<User>();
 }
