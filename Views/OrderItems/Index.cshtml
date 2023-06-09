@@ -1,0 +1,54 @@
+﻿@model IEnumerable<dotnet_products_rest_api.Models.OrderItem>
+
+@{
+	ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+	<a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Order)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Product)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Order.User.Email)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Quantity)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Order.Id)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Product.Name)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Order.User.Email)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Quantity)
+				</td>
+				<td>
+					<a asp-action="Edit" asp-route-orderId="@item.OrderId" asp-route-productId="@item.ProductId">Edit</a> |
+					<a asp-action="Details" asp-route-orderId="@item.OrderId" asp-route-productId="@item.ProductId">Details</a> |
+					<a asp-action="Delete" asp-route-orderId="@item.OrderId" asp-route-productId="@item.ProductId">Delete</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
