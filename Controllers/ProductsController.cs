@@ -53,7 +53,7 @@ namespace dotnet_products_rest_api.Controllers
 		// GET: Products/Create
 		public IActionResult Create()
 		{
-			ViewData["MerchantId"] = new SelectList(_context.Merchants.Where(m => m.State == 1), "Id", "MerchantName");
+			ViewData["MerchantId"] = new SelectList(_context.Merchants.Where(m => m.State == true), "Id", "MerchantName");
 			return View();
 		}
 
@@ -67,7 +67,7 @@ namespace dotnet_products_rest_api.Controllers
 
 			//Get merchant
 			var merchant = await _context.Merchants.FindAsync(product.MerchantId);
-			if (merchant == null || merchant.State == 0)
+			if (merchant == null || merchant.State == false)
 			{
 				return NotFound("MerchantId is not valid");
 			}
@@ -94,7 +94,7 @@ namespace dotnet_products_rest_api.Controllers
 			{
 				return NotFound();
 			}
-			ViewData["MerchantId"] = new SelectList(_context.Merchants.Where(m => m.State == 1), "Id", "MerchantName", product.MerchantId);
+			ViewData["MerchantId"] = new SelectList(_context.Merchants.Where(m => m.State == true), "Id", "MerchantName", product.MerchantId);
 			return View(product);
 		}
 

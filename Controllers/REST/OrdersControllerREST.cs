@@ -30,6 +30,7 @@ namespace dotnet_products_rest_api.Controllers.REST
 			}
 			var completeOrders = await _context.Orders
 				.Include(o => o.User)
+				.Include(o => o.OrderItems)
 				.Where(o => o.State == 1)
 				.ToListAsync();
 
@@ -149,7 +150,10 @@ namespace dotnet_products_rest_api.Controllers.REST
 
 		private Task<Order?> getOrderById(uint id)
 		{
-			return _context.Orders.FirstOrDefaultAsync(o => o.Id == id && o.State == 1);
+			return _context.Orders.
+				Include(o => o.User).
+				Include(o => o.OrderItems).
+				FirstOrDefaultAsync(o => o.Id == id && o.State == 1);
 		}
 	}
 }

@@ -97,7 +97,7 @@ namespace dotnet_products_rest_api.Controllers.REST
 			}
 			//Find Merchant
 			var merchant = await _context.Merchants.FindAsync(product.MerchantId);
-			if (merchant == null || merchant.State == 0)
+			if (merchant == null || merchant.State == false)
 			{
 				return NotFound("MerchantId not found.");
 			}

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace dotnet_products_rest_api.Models;
 
@@ -21,9 +22,12 @@ public partial class User
 
     public sbyte State { get; set; }
 
-    public virtual Country CountryCodeNavigation { get; set; } = null!;
+	[JsonPropertyName("country")]
+	public virtual Country CountryCodeNavigation { get; set; } = null!;
 
-    public virtual ICollection<Merchant> Merchants { get; set; } = new List<Merchant>();
+	[System.Text.Json.Serialization.JsonIgnore]
+	public virtual ICollection<Merchant> Merchants { get; set; } = new List<Merchant>();
 
-    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+	[System.Text.Json.Serialization.JsonIgnore]
+	public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }

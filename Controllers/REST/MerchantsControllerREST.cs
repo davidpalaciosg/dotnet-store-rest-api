@@ -32,7 +32,7 @@ namespace dotnet_products_rest_api.Controllers.REST
 				.Include(m => m.CountryCodeNavigation)
 				.Include(m => m.Admin)
 				.Include(m => m.Products)
-				.Where(m => m.State == 1)
+				.Where(m => m.State == true)
 				.ToListAsync();
 
 			return completeMerchants;
@@ -48,7 +48,7 @@ namespace dotnet_products_rest_api.Controllers.REST
 			}
 			var merchant = GetMerchantByID(id).Result;
 
-			if (merchant == null || merchant.State == 0)
+			if (merchant == null || merchant.State == false)
 			{
 				return NotFound();
 			}
@@ -71,7 +71,7 @@ namespace dotnet_products_rest_api.Controllers.REST
 			try
 			{
 				merchant.CreatedAt = DateOnly.FromDateTime(DateTime.Now);
-				merchant.State = 1;
+				merchant.State = true;
 				merchant.Admin = await _context.Users.FindAsync(merchant.AdminId);
 				merchant.CountryCodeNavigation = await _context.Countries.FindAsync(merchant.CountryCode);
 				merchant.Products = await _context.Products.Where(p => p.MerchantId == merchant.Id).ToListAsync();
@@ -144,7 +144,7 @@ namespace dotnet_products_rest_api.Controllers.REST
 				return NotFound();
 			}
 			//Update the state of the merchant
-			merchant.State = 0;
+			merchant.State = false;
 			_context.Entry(merchant).State = EntityState.Modified;
 			_context.Merchants.Update(merchant);
 			await _context.SaveChangesAsync();
@@ -154,7 +154,7 @@ namespace dotnet_products_rest_api.Controllers.REST
 
 		private bool MerchantExists(uint id)
 		{
-			return (_context.Merchants?.Any(e => e.Id == id && e.State == 1)).GetValueOrDefault();
+			return (_context.Merchants?.Any(e => e.Id == id && e.State == true)).GetValueOrDefault();
 		}
 
 		private async Task<Merchant?> GetMerchantByID(uint id)
@@ -163,7 +163,7 @@ namespace dotnet_products_rest_api.Controllers.REST
 				.Include(m => m.CountryCodeNavigation)
 				.Include(m => m.Admin)
 				.Include(m => m.Products)
-				.FirstOrDefaultAsync(m => m.Id == id && m.State == 1);
+				.FirstOrDefaultAsync(m => m.Id == id && m.State == true);
 		}
 	}
 }

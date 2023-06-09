@@ -24,7 +24,7 @@ namespace dotnet_products_rest_api.Controllers
 			var merchants = _context.Merchants
 				.Include(m => m.Admin)
 				.Include(m => m.CountryCodeNavigation)
-				.Where(m => m.State == 1)
+				.Where(m => m.State == true)
 				.ToListAsync();
 			return View(await merchants);
 		}
@@ -40,9 +40,9 @@ namespace dotnet_products_rest_api.Controllers
 			var merchant = await _context.Merchants
 				.Include(m => m.Admin)
 				.Include(m => m.CountryCodeNavigation)
-				.Where(m => m.State == 1)
+				.Where(m => m.State == true)
 				.FirstOrDefaultAsync(m => m.Id == id);
-			if (merchant == null || merchant.State == 0)
+			if (merchant == null || merchant.State == false)
 			{
 				return NotFound();
 			}
@@ -98,7 +98,7 @@ namespace dotnet_products_rest_api.Controllers
 			}
 
 			var merchant = await _context.Merchants.FindAsync(id);
-			if (merchant == null || merchant.State == 0)
+			if (merchant == null || merchant.State == false)
 			{
 				return NotFound();
 			}
@@ -147,7 +147,7 @@ namespace dotnet_products_rest_api.Controllers
 				.Include(m => m.Admin)
 				.Include(m => m.CountryCodeNavigation)
 				.FirstOrDefaultAsync(m => m.Id == id);
-			if (merchant == null || merchant.State == 0)
+			if (merchant == null || merchant.State == false)
 			{
 				return NotFound();
 			}
@@ -168,7 +168,7 @@ namespace dotnet_products_rest_api.Controllers
 			if (merchant != null)
 			{
 				//Update merchant state
-				merchant.State = 0;
+				merchant.State = false;
 				_context.Update(merchant);
 			}
 
@@ -178,7 +178,7 @@ namespace dotnet_products_rest_api.Controllers
 
 		private bool MerchantExists(uint id)
 		{
-			return (_context.Merchants?.Any(e => e.Id == id && e.State == 1)).GetValueOrDefault();
+			return (_context.Merchants?.Any(e => e.Id == id && e.State == true)).GetValueOrDefault();
 		}
 	}
 }
