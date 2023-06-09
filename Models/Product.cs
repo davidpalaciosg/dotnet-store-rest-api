@@ -27,5 +27,6 @@ public partial class Product
 	public sbyte State { get; set; }
 
 	[Display(Name = "Mercader")]
-    public virtual Merchant? Merchant { get; set; }
+	[System.Text.Json.Serialization.JsonIgnore]
+	public virtual Merchant? Merchant { get; set; }
 }
