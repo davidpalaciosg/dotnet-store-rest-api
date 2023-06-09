@@ -9,17 +9,18 @@ public partial class Order
     public uint Id { get; set; }
 
 	[Display(Name = "Usuario")]
-	public uint? UserId { get; set; }
+    public uint? UserId { get; set; }
 
 	[Display(Name = "Estado de la orden")]
-	public string Status { get; set; } = null!;
+    public string Status { get; set; } = null!;
 
 	[Display(Name = "Fecha de creación")]
-	public DateOnly? CreatedAt { get; set; }
+    public DateOnly? CreatedAt { get; set; }
 
 	[Display(Name = "Estado")]
-	public sbyte State { get; set; }
+    public sbyte State { get; set; }
 
-	[Display(Name = "Usuario")]
-	public virtual User? User { get; set; }
+    public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+
+    public virtual User? User { get; set; }
 }

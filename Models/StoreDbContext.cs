@@ -28,7 +28,7 @@ public partial class StoreDbContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseMySql("server=localhost;port=3307;database=store_db;user=root;password=password", Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.11.3-mariadb"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -82,8 +82,8 @@ public partial class StoreDbContext : DbContext
                 .HasMaxLength(150)
                 .HasColumnName("merchant_name");
             entity.Property(e => e.State)
+                .IsRequired()
                 .HasDefaultValueSql("'1'")
-                .HasColumnType("tinyint(4)")
                 .HasColumnName("state");
 
             entity.HasOne(d => d.Admin).WithMany(p => p.Merchants)
@@ -125,11 +125,11 @@ public partial class StoreDbContext : DbContext
 
         modelBuilder.Entity<OrderItem>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("order_items");
+            entity.HasKey(e => new { e.OrderId, e.ProductId })
+                .HasName("PRIMARY")
+                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
 
-            entity.HasIndex(e => e.OrderId, "order_items_FK");
+            entity.ToTable("order_items");
 
             entity.HasIndex(e => e.ProductId, "order_items_FK_1");
 
@@ -148,12 +148,12 @@ public partial class StoreDbContext : DbContext
                 .HasColumnType("tinyint(4)")
                 .HasColumnName("state");
 
-            entity.HasOne(d => d.Order).WithMany()
+            entity.HasOne(d => d.Order).WithMany(p => p.OrderItems)
                 .HasForeignKey(d => d.OrderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("order_items_FK");
 
-            entity.HasOne(d => d.Product).WithMany()
+            entity.HasOne(d => d.Product).WithMany(p => p.OrderItems)
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("order_items_FK_1");

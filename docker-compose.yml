@@ -14,12 +14,5 @@ services:
       - ./mariadb_data:/var/lib/mysql
     networks:
       - mynetwork
-
-  adminer:
-    image: adminer
-    ports:
-      - 8100:8080
-    networks:
-      - mynetwork
 networks:
   mynetwork:
