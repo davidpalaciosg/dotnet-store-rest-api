@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace dotnet_products_rest_api.Models;
 
@@ -7,13 +8,18 @@ public partial class Order
 {
     public uint Id { get; set; }
 
-    public uint? UserId { get; set; }
+	[Display(Name = "Usuario")]
+	public uint? UserId { get; set; }
 
-    public string Status { get; set; } = null!;
+	[Display(Name = "Estado de la orden")]
+	public string Status { get; set; } = null!;
 
-    public DateOnly? CreatedAt { get; set; }
+	[Display(Name = "Fecha de creación")]
+	public DateOnly? CreatedAt { get; set; }
 
-    public sbyte State { get; set; }
+	[Display(Name = "Estado")]
+	public sbyte State { get; set; }
 
-    public virtual User? User { get; set; }
+	[Display(Name = "Usuario")]
+	public virtual User? User { get; set; }
 }
