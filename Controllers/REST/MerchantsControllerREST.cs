@@ -101,7 +101,6 @@ namespace dotnet_products_rest_api.Controllers.REST
 			{
 				return Problem("Entity set 'StoreDbContext.Merchants'  is null.");
 			}
-			merchant.CreatedAt = DateOnly.FromDateTime(DateTime.Now);
 
 			//Find CountryCode
 			var country = await _context.Countries.FindAsync(merchant.CountryCode);
