@@ -1,5 +1,5 @@
 # Store APP - ASP.NET MVC
-Store App is a application that allows you to manage the products, merchants, orders, users, and countries of a store. It is a project developed in ASP.NET MVC with C# and MariaDB. It uses Entity Framework Core as ORM and Bootstrap for the frontend.
+Store App is an application that allows you to manage the products, merchants, orders, users, and countries of a store. It is a project developed in ASP.NET MVC with C# and MariaDB. It uses Entity Framework Core as ORM and Bootstrap for the frontend.
 
 To execute the project, you must have installed:
 - Docker and Docker Compose
@@ -24,6 +24,9 @@ This is a MVC project, so it must be executed from Visual Studio 2022. The proje
 It has two types of controllers:
 - MVC controllers: They are in the `Controllers` folder. They are responsible for managing the views and the data that is sent to them.
 - API controllers: They are in the `Controllers/REST` folder. They are responsible for managing the data that is sent to them and returning it in JSON format.
+
+This project has Swagger configured, so you can see the full documentation of the API controllers at the following URL:
+http://localhost:5014/swagger/index.html
 
 The endpoints of the API controllers are:
 - Countries:
