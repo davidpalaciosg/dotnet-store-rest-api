@@ -210,7 +210,7 @@ namespace dotnet_products_rest_api.Controllers
 
 
 
-        private bool OrderItemExists(uint orderId, uint productId)
+        private bool OrderItemExists(uint? orderId, uint? productId)
         {
             return _context.OrderItems?.Any(e => e.OrderId == orderId && e.ProductId == productId && e.State == 1) ?? false;
         }
